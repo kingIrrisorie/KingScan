@@ -1,3 +1,5 @@
+using APIManga.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIManga
 {
@@ -8,6 +10,9 @@ namespace APIManga
 			var builder = WebApplication.CreateBuilder(args);
 
 			// Add services to the container.
+			builder.Services.AddDbContext<KingIrrisorieScanContext>(options =>
+				options.UseSqlServer(
+				builder.Configuration.GetConnectionString("ConexaoPadrao")));
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -25,5 +25,12 @@ namespace APIManga.Model
 		public DateTime? Released {  get; set; }
 
 		public ICollection<Chapter> Chapters { get; set; }
+
+		public string? ThumbnailURL { get; set; }
+
+		public int? AuthorId { get; set; }
+		public Author? Author { get; set; }
+
+		public ICollection<Gender> Genres { get; set; }
 	}
 }

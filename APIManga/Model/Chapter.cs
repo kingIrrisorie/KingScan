@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIManga.Model
 {
@@ -7,10 +8,15 @@ namespace APIManga.Model
 		[Key]
 		public int Id { get; private set; }
 
-		public int MangId { get; set; }
+		[ForeignKey("Manga")]
+		public int MangaId { get; set; }
+		public Manga Manga { get; set; }
+
+
+		public string? Title { get; set; }
 
 		public int Number {  get; set; }
 
-		public Manga manga { get; set; }
+		public ICollection<Page> Pages { get; set; }
 	}
 }
