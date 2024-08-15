@@ -1,0 +1,71 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\hella\\OneDrive\\Documentos\\projetos\\KingScan\\APIManga\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{27D47510-3629-4160-93B5-6A36A27DE4BD}|APIManga.csproj|c:\\users\\hella\\onedrive\\documentos\\projetos\\kingscan\\apimanga\\model\\manga.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27D47510-3629-4160-93B5-6A36A27DE4BD}|APIManga.csproj|solutionrelative:model\\manga.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27D47510-3629-4160-93B5-6A36A27DE4BD}|APIManga.csproj|c:\\users\\hella\\onedrive\\documentos\\projetos\\kingscan\\apimanga\\model\\chapter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27D47510-3629-4160-93B5-6A36A27DE4BD}|APIManga.csproj|solutionrelative:model\\chapter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{27D47510-3629-4160-93B5-6A36A27DE4BD}|APIManga.csproj|c:\\users\\hella\\onedrive\\documentos\\projetos\\kingscan\\apimanga\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{27D47510-3629-4160-93B5-6A36A27DE4BD}|APIManga.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Chapter.cs",
+              "DocumentMoniker": "C:\\Users\\hella\\OneDrive\\Documentos\\projetos\\KingScan\\APIManga\\Model\\Chapter.cs",
+              "RelativeDocumentMoniker": "Model\\Chapter.cs",
+              "ToolTip": "C:\\Users\\hella\\OneDrive\\Documentos\\projetos\\KingScan\\APIManga\\Model\\Chapter.cs",
+              "RelativeToolTip": "Model\\Chapter.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-15T18:55:08.141Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Manga.cs",
+              "DocumentMoniker": "C:\\Users\\hella\\OneDrive\\Documentos\\projetos\\KingScan\\APIManga\\Model\\Manga.cs",
+              "RelativeDocumentMoniker": "Model\\Manga.cs",
+              "ToolTip": "C:\\Users\\hella\\OneDrive\\Documentos\\projetos\\KingScan\\APIManga\\Model\\Manga.cs",
+              "RelativeToolTip": "Model\\Manga.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-15T18:16:32.242Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\hella\\OneDrive\\Documentos\\projetos\\KingScan\\APIManga\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\hella\\OneDrive\\Documentos\\projetos\\KingScan\\APIManga\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-15T18:04:55.076Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
