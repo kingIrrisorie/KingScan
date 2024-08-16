@@ -28,6 +28,7 @@ namespace APIManga.Model
 
 		public string? ThumbnailURL { get; set; }
 
+		[ForeignKey("Author")]
 		public int? AuthorId { get; set; }
 		public Author? Author { get; set; }
 

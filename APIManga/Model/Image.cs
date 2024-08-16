@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIManga.Model
 {
 	public class Image
 	{
+		[Key]
 		public int Id { get; set; }
+		[ForeignKey("Page")]
 		public int PageId { get; set; }
 		public string ImagePath { get; set; }
 		public int Order { get; set; }
