@@ -24,14 +24,17 @@ namespace APIManga.Model
 		[DataType(DataType.Date)]
 		public DateTime? Released {  get; set; }
 
-		public ICollection<Chapter> Chapters { get; set; }
-
 		public string? ThumbnailURL { get; set; }
 
+
+		/*********************
 		[ForeignKey("Author")]
 		public int? AuthorId { get; set; }
 		public Author? Author { get; set; }
 
-		public ICollection<Gender> Genres { get; set; }
+		public ICollection<Chapter>? Chapters { get; set; }
+
+		public ICollection<Gender>? Genres { get; set; }
+		**********************/
 	}
 }

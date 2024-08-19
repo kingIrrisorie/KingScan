@@ -5,8 +5,7 @@ VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIManga", "APIManga.csproj", "{27D47510-3629-4160-93B5-6A36A27DE4BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "frontend", "..\frontend\frontend.csproj", "{5B674A04-431C-415D-84F9-C48543F36CB8}"
-EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

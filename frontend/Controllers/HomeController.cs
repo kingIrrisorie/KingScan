@@ -11,7 +11,7 @@ namespace frontend.Controllers
 		public HomeController(HttpClient httpClient)
 		{ 
 			_httpClient = httpClient;
-			_httpClient.BaseAddress = new Uri("https://localhost:7160");
+			_httpClient.BaseAddress = new Uri("http://localhost:5215");
 
         }
 		public async Task<IActionResult> Index()

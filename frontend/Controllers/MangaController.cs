@@ -7,32 +7,56 @@ namespace frontend.Controllers
     public class MangaController : Controller
     {
         private readonly HttpClient _httpClient;
-        public MangaController()
-        {
-            _httpClient = new HttpClient();
-			Uri uri = new Uri("https://localhost:7160");
-			_httpClient.BaseAddress = uri;
+		public MangaController(HttpClient httpClient)
+		{
+			_httpClient = httpClient;
+			_httpClient.BaseAddress = new Uri("http://localhost:5215");
 		}
 
-        // GET: MangaController
-        [Route("Manga/{Id}")]
+
+		// GET: MangaController
+		[Route("Manga/{Id}")]
         public async Task<ActionResult> Index(int Id)
         {
-            string requestUrl = $"api/Mangas/{Id}";
-
-            HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var mangaJson = await response.Content.ReadAsStringAsync();
-                var manga = JsonConvert.DeserializeObject<Manga>(mangaJson);
+			try
+			{
+				var manga = await GetMangaAsync(Id);
+				if (manga == null)
+					return NotFound();
 
 				return View(manga);
-            }
-            else
-                return View("Error");
-        }
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, "Erro ao obter mangá");
+			}
+		}
 
+        public async Task<Manga> GetMangaAsync(int Id)
+        {
+            Manga manga = null;
+
+            string requestUrl = $"api/Mangas/{Id}";
+
+            try
+            {
+				HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+				response.EnsureSuccessStatusCode();
+				var mangaJson = await response.Content.ReadAsStringAsync();
+                manga = JsonConvert.DeserializeObject<Manga>(mangaJson);
+                return manga;
+            }
+			catch (HttpRequestException ex)
+			{
+				throw new Exception($"Erro na requisição HTTP: {ex.Message}", ex);
+			}
+			catch (JsonException ex)
+			{
+				throw new Exception($"Erro na deserialização JSON: {ex.Message}", ex);
+			}
+
+		}
+        /*
         // GET: MangaController1/Details/5
         public ActionResult Details(int id)
         {
@@ -100,6 +124,6 @@ namespace frontend.Controllers
             {
                 return View();
             }
-        }
+        }*/
     }
 }

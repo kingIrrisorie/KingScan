@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIManga.Context;
 using APIManga.Model;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace APIManga.Controllers
 {
@@ -28,31 +24,34 @@ namespace APIManga.Controllers
             return await _context.Mangas.ToListAsync();
         }
 
-        // GET: api/Mangas/5
+        // GET: api/Manga/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Manga>> GetManga(int id)
         {
-            var manga = await _context.Mangas.FindAsync(id);
+			if (!MangaExists(id))
+				return NotFound();
 
-            if (manga == null)
-            {
-                return NotFound();
-            }
+			var manga = await _context.Mangas.FindAsync(id);
 
             return manga;
         }
 
-        // PUT: api/Mangas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/Manga/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutManga(int id, Manga manga)
+		public async Task<IActionResult> PutManga(int id, Manga manga)
         {
-            if (id != manga.Id)
-            {
-                return BadRequest();
-            }
+			if (MangaExists(id))
+				return NotFound();
 
-            _context.Entry(manga).State = EntityState.Modified;
+			var mangaToUpdate = await _context.Mangas.FindAsync(id);
+
+			mangaToUpdate.Title = manga.Title;
+			mangaToUpdate.Status = manga.Status;
+			mangaToUpdate.Description = manga.Description;
+			mangaToUpdate.ThumbnailURL = manga.ThumbnailURL;
+			mangaToUpdate.Released = manga.Released;
+
+			_context.Entry(mangaToUpdate).State = EntityState.Modified;
 
             try
             {
@@ -60,21 +59,13 @@ namespace APIManga.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MangaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
-            return NoContent();
+            return StatusCode(StatusCodes.Status204NoContent);
         }
 
-        // POST: api/Mangas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/Manga
         [HttpPost]
         public async Task<ActionResult<Manga>> PostManga(Manga manga)
         {
@@ -84,15 +75,13 @@ namespace APIManga.Controllers
             return CreatedAtAction("GetManga", new { id = manga.Id }, manga);
         }
 
-        // DELETE: api/Mangas/5
+        // DELETE: api/Manga/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteManga(int id)
         {
-            var manga = await _context.Mangas.FindAsync(id);
-            if (manga == null)
-            {
-                return NotFound();
-            }
+			if (MangaExists(id))
+				return NotFound();
+			var manga = await _context.Mangas.FindAsync(id);
 
             _context.Mangas.Remove(manga);
             await _context.SaveChangesAsync();
