@@ -4,6 +4,7 @@ using APIManga.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIManga.Migrations
 {
     [DbContext(typeof(KingIrrisorieScanContext))]
-    partial class KingIrrisorieScanContextModelSnapshot : ModelSnapshot
+    [Migration("20240819194820_adicionandoCriacaoDeAuthor1")]
+    partial class adicionandoCriacaoDeAuthor1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

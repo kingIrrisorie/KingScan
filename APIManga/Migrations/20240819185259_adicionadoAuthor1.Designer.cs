@@ -4,6 +4,7 @@ using APIManga.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIManga.Migrations
 {
     [DbContext(typeof(KingIrrisorieScanContext))]
-    partial class KingIrrisorieScanContextModelSnapshot : ModelSnapshot
+    [Migration("20240819185259_adicionadoAuthor1")]
+    partial class adicionadoAuthor1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,23 +25,6 @@ namespace APIManga.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("APIManga.Model.Author", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Authors");
-                });
-
             modelBuilder.Entity("APIManga.Model.Manga", b =>
                 {
                     b.Property<int>("Id")
@@ -46,9 +32,6 @@ namespace APIManga.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AuthorId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -69,23 +52,7 @@ namespace APIManga.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
-
                     b.ToTable("Mangas");
-                });
-
-            modelBuilder.Entity("APIManga.Model.Manga", b =>
-                {
-                    b.HasOne("APIManga.Model.Author", "Author")
-                        .WithMany("Mangas")
-                        .HasForeignKey("AuthorId");
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("APIManga.Model.Author", b =>
-                {
-                    b.Navigation("Mangas");
                 });
 #pragma warning restore 612, 618
         }

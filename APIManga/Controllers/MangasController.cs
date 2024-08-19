@@ -2,7 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using APIManga.Context;
 using APIManga.Model;
+using APIManga.DTOs;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace APIManga.Controllers
 {
@@ -38,7 +41,7 @@ namespace APIManga.Controllers
 
         // PUT: api/Manga/5
         [HttpPut("{id}")]
-		public async Task<IActionResult> PutManga(int id, Manga manga)
+		public async Task<IActionResult> UpdateManga(int id, Manga manga)
         {
 			if (MangaExists(id))
 				return NotFound();
@@ -67,19 +70,42 @@ namespace APIManga.Controllers
 
         // POST: api/Manga
         [HttpPost]
-        public async Task<ActionResult<Manga>> PostManga(Manga manga)
+        public async Task<ActionResult> CreateManga(MangaDTO dto)
         {
-            _context.Mangas.Add(manga);
-            await _context.SaveChangesAsync();
+			Author? author = null;  // Inicializando author como null
 
-            return CreatedAtAction("GetManga", new { id = manga.Id }, manga);
-        }
+			if (!string.IsNullOrEmpty(dto.AuthorName))
+			{
+				author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == dto.AuthorName);
+				if (author == null)
+				{
+					author = new Author { Name = dto.AuthorName };
+					_context.Authors.Add(author);
+					await _context.SaveChangesAsync();
+				}
+			}
+
+			Manga manga = new Manga
+			{
+				Title = dto.Title,
+				Status = dto.Status,
+				Description = dto.Description,
+				Released = dto.Released,
+				ThumbnailURL = dto.ThumbnailURL,
+				Author = author
+			};
+
+			_context.Mangas.Add(manga);
+			await _context.SaveChangesAsync();
+
+            return NoContent();
+		}
 
         // DELETE: api/Manga/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteManga(int id)
         {
-			if (MangaExists(id))
+			if (!MangaExists(id))
 				return NotFound();
 			var manga = await _context.Mangas.FindAsync(id);
 

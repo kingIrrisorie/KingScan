@@ -26,12 +26,10 @@ namespace APIManga.Model
 
 		public string? ThumbnailURL { get; set; }
 
-
-		/*********************
 		[ForeignKey("Author")]
 		public int? AuthorId { get; set; }
 		public Author? Author { get; set; }
-
+		/**********************
 		public ICollection<Chapter>? Chapters { get; set; }
 
 		public ICollection<Gender>? Genres { get; set; }
