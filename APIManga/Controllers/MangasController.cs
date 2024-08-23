@@ -6,6 +6,8 @@ using APIManga.DTOs;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using NuGet.Versioning;
+using Humanizer.Localisation;
 
 namespace APIManga.Controllers
 {
@@ -20,41 +22,132 @@ namespace APIManga.Controllers
             _context = context;
         }
 
-        // GET: api/Mangas
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Manga>>> GetMangas()
+        // GET: api/Mangas/{title}
+        [HttpGet("search/{title}")]
+        public async Task<ActionResult<IEnumerable<Manga>>> GetMangas(string title)
         {
-            return await _context.Mangas.ToListAsync();
+            var mangas = await _context.Mangas
+            .Include(m => m.Author)
+            .Include(m => m.Genres)
+            .Where(m => m.Title.Contains(title))
+            .Select(m => new MangaDTO
+            {
+                Id = m.Id, // Inclua o Id na projeção
+                Title = m.Title,
+                Status = m.Status,
+                Description = m.Description,
+                Released = m.Released,
+                ThumbnailURL = m.ThumbnailURL,
+                AuthorName = m.Author != null ? m.Author.Name : null,
+                GenreNames = m.Genres.Select(g => g.Name).ToList()
+            })
+            .ToListAsync();
+
+
+            if (mangas == null || !mangas.Any())
+                return NotFound();
+
+            return Ok(mangas);
         }
 
+
         // GET: api/Manga/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Manga>> GetManga(int id)
+        [HttpGet("id:{id}")]
+        public async Task<ActionResult<MangaDTO>> GetManga(int id)
         {
 			if (!MangaExists(id))
 				return NotFound();
 
-			var manga = await _context.Mangas.FindAsync(id);
+            var manga = await _context.Mangas
+                .Include(a => a.Author)
+                .Include(g => g.Genres)
+                .Where(i => i.Id == id)
+                .Select(m => new MangaDTO
+                {
+                    Id = m.Id,
+                    Title = m.Title,
+                    Status = m.Status,
+                    Description = m.Description,
+                    Released = m.Released,
+                    ThumbnailURL = m.ThumbnailURL,
+                    AuthorName = m.Author != null ? m.Author.Name : null,
+                    GenreNames = m.Genres.Select(g => g.Name).ToList()
+                }).FirstOrDefaultAsync();
+
+            if (manga == null)
+                return NotFound();
 
             return manga;
         }
 
         // PUT: api/Manga/5
         [HttpPut("{id}")]
-		public async Task<IActionResult> UpdateManga(int id, Manga manga)
+        public async Task<IActionResult> UpdateManga(int id, MangaDTO mangaDto)
         {
-			if (MangaExists(id))
-				return NotFound();
+            // Verifica se o Manga existe
+            var mangaToUpdate = await _context.Mangas
+                .Include(m => m.Genres)
+                .Include(m => m.Author).
+                FirstOrDefaultAsync(m => m.Id == id);
+            if (mangaToUpdate == null)
+            {
+                return NotFound();
+            }
 
-			var mangaToUpdate = await _context.Mangas.FindAsync(id);
+            // Atualiza as propriedades do Manga
+            mangaToUpdate.Title = mangaDto.Title;
+            mangaToUpdate.Status = mangaDto.Status;
+            mangaToUpdate.Description = mangaDto.Description;
+            mangaToUpdate.Released = mangaDto.Released;
+            mangaToUpdate.ThumbnailURL = mangaDto.ThumbnailURL;
 
-			mangaToUpdate.Title = manga.Title;
-			mangaToUpdate.Status = manga.Status;
-			mangaToUpdate.Description = manga.Description;
-			mangaToUpdate.ThumbnailURL = manga.ThumbnailURL;
-			mangaToUpdate.Released = manga.Released;
+            // Verifica se o nome do autor foi fornecido
+            if (!string.IsNullOrEmpty(mangaDto.AuthorName))
+            {
+                // Tenta encontrar o autor pelo nome
+                var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == mangaDto.AuthorName);
 
-			_context.Entry(mangaToUpdate).State = EntityState.Modified;
+                if (author == null)
+                {
+                    // Se o autor não existir, cria um novo
+                    author = new Author { Name = mangaDto.AuthorName };
+                    _context.Authors.Add(author);
+                    await _context.SaveChangesAsync(); // Salva o novo autor no banco de dados
+                }
+
+                mangaToUpdate.AuthorId = author.Id;
+            }
+            else
+            {
+                // Permite que o campo AuthorId seja nulo se o nome do autor não for fornecido
+                mangaToUpdate.AuthorId = null;
+            }
+
+            if (mangaDto.GenreNames != null)
+            {
+                var genreNames = mangaDto.GenreNames.Distinct().ToList(); // Remove nomes duplicados
+
+                // Obtém todos os gêneros existentes no banco
+                var existingGenres = await _context.Genres
+                    .Where(g => genreNames.Contains(g.Name))
+                    .ToListAsync();
+
+                // Obtém os gêneros que não estão no banco e cria novos
+                var newGenreNames = genreNames.Except(existingGenres.Select(g => g.Name)).ToList();
+                var newGenres = newGenreNames.Select(name => new Gender { Name = name }).ToList();
+
+                if (newGenres.Any())
+                {
+                    _context.Genres.AddRange(newGenres);
+                    await _context.SaveChangesAsync(); // Salva novos gêneros no banco de dados
+                }
+
+                // Atualiza a coleção de gêneros do manga
+                mangaToUpdate.Genres = existingGenres.Concat(newGenres).ToList();
+            }
+
+            // Marca a entidade como modificada
+            _context.Entry(mangaToUpdate).State = EntityState.Modified;
 
             try
             {
@@ -67,6 +160,7 @@ namespace APIManga.Controllers
 
             return StatusCode(StatusCodes.Status204NoContent);
         }
+
 
         // POST: api/Manga
         [HttpPost]
@@ -95,8 +189,25 @@ namespace APIManga.Controllers
 				Author = author
 			};
 
-			_context.Mangas.Add(manga);
-			await _context.SaveChangesAsync();
+            // Tratamento dos gêneros
+            if (dto.GenreNames != null)
+            {
+                foreach (var genreName in dto.GenreNames)
+                {
+                    var genre = await _context.Genres.FirstOrDefaultAsync(g => g.Name == genreName);
+                    if (genre == null)
+                    {
+                        genre = new Gender { Name = genreName};
+                        _context.Genres.Add(genre);
+                        await _context.SaveChangesAsync();
+                    }
+                    manga.Genres.Add(genre);
+                }
+            }
+            // "acao", "gore", "drama"
+            // Adiciona o Manga ao contexto e salva as alterações
+            _context.Mangas.Add(manga);
+            await _context.SaveChangesAsync();
 
             return NoContent();
 		}

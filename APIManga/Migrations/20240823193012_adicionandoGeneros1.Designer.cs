@@ -4,6 +4,7 @@ using APIManga.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIManga.Migrations
 {
     [DbContext(typeof(KingIrrisorieScanContext))]
-    partial class KingIrrisorieScanContextModelSnapshot : ModelSnapshot
+    [Migration("20240823193012_adicionandoGeneros1")]
+    partial class adicionandoGeneros1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,19 +94,19 @@ namespace APIManga.Migrations
                     b.ToTable("Mangas");
                 });
 
-            modelBuilder.Entity("MangaGenre", b =>
+            modelBuilder.Entity("GenderManga", b =>
                 {
-                    b.Property<int>("GenreId")
+                    b.Property<int>("GenresId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MangaId")
+                    b.Property<int>("MangasId")
                         .HasColumnType("int");
 
-                    b.HasKey("GenreId", "MangaId");
+                    b.HasKey("GenresId", "MangasId");
 
-                    b.HasIndex("MangaId");
+                    b.HasIndex("MangasId");
 
-                    b.ToTable("MangaGenre");
+                    b.ToTable("MangaGenre", (string)null);
                 });
 
             modelBuilder.Entity("APIManga.Model.Manga", b =>
@@ -115,17 +118,17 @@ namespace APIManga.Migrations
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("MangaGenre", b =>
+            modelBuilder.Entity("GenderManga", b =>
                 {
                     b.HasOne("APIManga.Model.Gender", null)
                         .WithMany()
-                        .HasForeignKey("GenreId")
+                        .HasForeignKey("GenresId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("APIManga.Model.Manga", null)
                         .WithMany()
-                        .HasForeignKey("MangaId")
+                        .HasForeignKey("MangasId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

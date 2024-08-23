@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIManga.Model
 {
@@ -7,7 +8,6 @@ namespace APIManga.Model
 		[Key]
 		public int Id { get; set; }
 		public string Name { get; set; }
-
 		public ICollection<Manga> Mangas { get; set; }
 	}
 }

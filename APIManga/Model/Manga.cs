@@ -29,10 +29,10 @@ namespace APIManga.Model
 		[ForeignKey("Author")]
 		public int? AuthorId { get; set; }
 		public Author? Author { get; set; }
-		/**********************
-		public ICollection<Chapter>? Chapters { get; set; }
+        public ICollection<Gender>? Genres { get; set; } = new List<Gender>();
 
-		public ICollection<Gender>? Genres { get; set; }
+        /**********************
+		public ICollection<Chapter>? Chapters { get; set; }
 		**********************/
-	}
+    }
 }

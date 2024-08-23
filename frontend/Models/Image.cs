@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿/*using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace frontend.Models
@@ -14,3 +14,4 @@ namespace frontend.Models
 		public Page Page { get; set; }
 	}
 }
+*/

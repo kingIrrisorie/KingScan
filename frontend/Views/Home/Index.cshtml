@@ -6,17 +6,6 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <a asp-action="Index" asp-controller="Manga" asp-route-Id="2">Link para -> Lubu</a>
+    <a asp-action="Index" asp-controller="Manga" asp-route-Id="5">Link para -> Lubu</a>
 </div>
 
-@foreach(Manga manga in Model)
-{
-    <br />
-    @manga.Id;
-    <br />
-    @manga.Title;
-    <br />
-    @manga.Description;
-    <br />
-    @manga.Status;
-}

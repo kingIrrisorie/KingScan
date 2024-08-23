@@ -24,7 +24,7 @@ namespace frontend.Models
         [DataType(DataType.Date)]
         public DateTime? Released { get; set; }
 
-        public ICollection<Chapter> Chapters { get; set; }
+        //public ICollection<Chapter> Chapters { get; set; }
 
         public string? ThumbnailURL { get; set; }
 
@@ -32,6 +32,6 @@ namespace frontend.Models
         public int? AuthorId { get; set; }
         public Author? Author { get; set; }
 
-        public ICollection<Gender> Genres { get; set; }
+        //public ICollection<Gender> Genres { get; set; }
     }
 }
