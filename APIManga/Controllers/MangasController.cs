@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using NuGet.Versioning;
 using Humanizer.Localisation;
+using APIManga.Services;
 
 namespace APIManga.Controllers
 {
@@ -82,7 +83,7 @@ namespace APIManga.Controllers
 
         // PUT: api/Manga/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateManga(int id, MangaDTO mangaDto)
+        public async Task<IActionResult> UpdateManga(int id, MangaUpCreate mangaDto)
         {
             // Verifica se o Manga existe
             var mangaToUpdate = await _context.Mangas
@@ -95,21 +96,17 @@ namespace APIManga.Controllers
             }
 
             // Atualiza as propriedades do Manga
-            mangaToUpdate.Title = mangaDto.Title;
-            mangaToUpdate.Status = mangaDto.Status;
-            mangaToUpdate.Description = mangaDto.Description;
-            mangaToUpdate.Released = mangaDto.Released;
-            mangaToUpdate.ThumbnailURL = mangaDto.ThumbnailURL;
+            MangaServices.AddBasicParameters(mangaToUpdate, mangaDto);
 
             // Verifica se o nome do autor foi fornecido
             if (!string.IsNullOrEmpty(mangaDto.AuthorName))
             {
-                // Tenta encontrar o autor pelo nome
+                // get author: var author = await GetAuthor(mangaDto);
                 var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == mangaDto.AuthorName);
 
                 if (author == null)
                 {
-                    // Se o autor não existir, cria um novo
+                    // criar um novo: author = CreateAuthor
                     author = new Author { Name = mangaDto.AuthorName };
                     _context.Authors.Add(author);
                     await _context.SaveChangesAsync(); // Salva o novo autor no banco de dados
@@ -164,7 +161,7 @@ namespace APIManga.Controllers
 
         // POST: api/Manga
         [HttpPost]
-        public async Task<ActionResult> CreateManga(MangaDTO dto)
+        public async Task<ActionResult> CreateManga(MangaUpCreate dto)
         {
 			Author? author = null;  // Inicializando author como null
 
@@ -179,15 +176,9 @@ namespace APIManga.Controllers
 				}
 			}
 
-			Manga manga = new Manga
-			{
-				Title = dto.Title,
-				Status = dto.Status,
-				Description = dto.Description,
-				Released = dto.Released,
-				ThumbnailURL = dto.ThumbnailURL,
-				Author = author
-			};
+            Manga manga = new Manga();
+            MangaServices.AddBasicParameters(manga, dto);
+            manga.Author = author;
 
             // Tratamento dos gêneros
             if (dto.GenreNames != null)
