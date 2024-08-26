@@ -85,6 +85,7 @@ namespace APIManga.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateManga(int id, MangaUpCreate mangaDto)
         {
+            var authorController = new AuthorController(_context);
             // Verifica se o Manga existe
             var mangaToUpdate = await _context.Mangas
                 .Include(m => m.Genres)
@@ -98,26 +99,14 @@ namespace APIManga.Controllers
             // Atualiza as propriedades do Manga
             MangaServices.AddBasicParameters(mangaToUpdate, mangaDto);
 
-            // Verifica se o nome do autor foi fornecido
             if (!string.IsNullOrEmpty(mangaDto.AuthorName))
             {
-                // get author: var author = await GetAuthor(mangaDto);
-                var author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == mangaDto.AuthorName);
+                IActionResult authorResult = await authorController.AddAuthor(mangaDto.AuthorName, ReturnAuthor: true);
 
-                if (author == null)
+                if (authorResult is OkObjectResult okResult && okResult.Value is Author author)
                 {
-                    // criar um novo: author = CreateAuthor
-                    author = new Author { Name = mangaDto.AuthorName };
-                    _context.Authors.Add(author);
-                    await _context.SaveChangesAsync(); // Salva o novo autor no banco de dados
+                    mangaToUpdate.Author = author;
                 }
-
-                mangaToUpdate.AuthorId = author.Id;
-            }
-            else
-            {
-                // Permite que o campo AuthorId seja nulo se o nome do autor não for fornecido
-                mangaToUpdate.AuthorId = null;
             }
 
             if (mangaDto.GenreNames != null)
@@ -163,22 +152,20 @@ namespace APIManga.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateManga(MangaUpCreate dto)
         {
-			Author? author = null;  // Inicializando author como null
-
-			if (!string.IsNullOrEmpty(dto.AuthorName))
-			{
-				author = await _context.Authors.FirstOrDefaultAsync(a => a.Name == dto.AuthorName);
-				if (author == null)
-				{
-					author = new Author { Name = dto.AuthorName };
-					_context.Authors.Add(author);
-					await _context.SaveChangesAsync();
-				}
-			}
-
+            var authorController = new AuthorController(_context);
             Manga manga = new Manga();
+
             MangaServices.AddBasicParameters(manga, dto);
-            manga.Author = author;
+
+            if (!string.IsNullOrEmpty(dto.AuthorName))
+            {
+                IActionResult authorResult = await authorController.AddAuthor(dto.AuthorName, ReturnAuthor: true);
+
+                if (authorResult is OkObjectResult okResult && okResult.Value is Author author)
+                {
+                    manga.Author = author;
+                }
+            }
 
             // Tratamento dos gêneros
             if (dto.GenreNames != null)
