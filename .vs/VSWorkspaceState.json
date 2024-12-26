@@ -1,4 +1,13 @@
 {
-  "ExpandedNodes": [],
+  "ExpandedNodes": [
+    "",
+    "\\APIManga\\Controllers",
+    "\\frontend",
+    "\\frontend\\Controllers",
+    "\\frontend\\Views",
+    "\\frontend\\Views\\Manga",
+    "\\frontend\\Views\\Shared"
+  ],
+  "SelectedNode": "\\frontend\\Controllers\\MangaController.cs",
   "PreviewInSolutionExplorer": false
 }

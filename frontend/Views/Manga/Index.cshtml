@@ -1,23 +1,21 @@
 ﻿@model frontend.Models.Manga
 
-@if (Model != null)
-{
+@{
 	Manga manga = Model;
-
-	<img src="@manga.ThumbnailURL">
-
-	<h1>@manga.Title</h1>
-	
-	@manga.Author.Name;
-	<br />
-	@manga.Status;
-	<br />
-	<br />
-	@manga.Released;
-	<br />
-	@manga.Description;
-	<br />
-} else
-{
-	<p>Nao achado</p>
 }
+
+<span>id: @manga.Id</span>
+<h1>@manga.Title</h1>
+<span>status: @manga.Status</span>
+<p>description:<br />@manga.Description</p>
+<p>lancamento: @manga.Released</p>
+<p>thumbnail: @manga.ThumbnailURL</p>
+<p>autor: @manga.AuthorName</p>
+
+<p>
+	generos: @foreach (string gender in manga.GenreNames)
+	{
+		<span>@gender </span>
+	}
+</p>
+

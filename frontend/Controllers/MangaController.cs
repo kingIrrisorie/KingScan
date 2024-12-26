@@ -4,6 +4,7 @@ using frontend.Models;
 
 namespace frontend.Controllers
 {
+    [Route("Manga")]
     public class MangaController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -15,28 +16,33 @@ namespace frontend.Controllers
 
 
 		// GET: MangaController
-		[Route("Manga/{Id}")]
-        public async Task<ActionResult> Index(int Id)
+		[HttpGet("{Id}")]
+        public async Task<ActionResult> Index(string Id)
         {
-			try
-			{
-				var manga = await GetMangaAsync(Id);
-				if (manga == null)
-					return NotFound();
+            int idint = int.Parse(Id);
+            try
+            {
+                var manga = await GetMangaAsync(idint);
+                if (manga == null)
+                {
+                    Console.WriteLine("Manga não encontrado."); // Log para verificar se o manga é nulo
+                    return NotFound();
+                }
 
-				return View(manga);
-			}
-			catch (Exception ex)
-			{
-				return StatusCode(500, "Erro ao obter mangá");
-			}
-		}
+                return View(manga);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro: {ex.Message}"); // Log do erro
+                return StatusCode(500, "Erro ao obter mangá");
+            }
+        }
 
         public async Task<Manga> GetMangaAsync(int Id)
         {
             Manga manga = null;
 
-            string requestUrl = $"api/Mangas/{Id}";
+            string requestUrl = $"api/Mangas/id:{Id}";
 
             try
             {
@@ -44,6 +50,7 @@ namespace frontend.Controllers
 				response.EnsureSuccessStatusCode();
 				var mangaJson = await response.Content.ReadAsStringAsync();
                 manga = JsonConvert.DeserializeObject<Manga>(mangaJson);
+
                 return manga;
             }
 			catch (HttpRequestException ex)
