@@ -7,10 +7,9 @@ namespace APIManga.Model
 	{
 		[Key]
 		public int Id { get; set; }
-		[ForeignKey("Page")]
 		public int PageId { get; set; }
-		public string ImagePath { get; set; }
-		public int Order { get; set; }
 		public Page Page { get; set; }
+		public string ImageUrl { get; set; }
+		public int ImageOrder { get; set; }
 	}
 }

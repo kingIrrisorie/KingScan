@@ -2,12 +2,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 namespace APIManga.Model
 {
-	public enum StatusManga
-	{
-		EmProgresso,
-		Finalizado,
-		Abandonado
-	}
 	public class Manga
 	{
 		[Key]
@@ -16,23 +10,22 @@ namespace APIManga.Model
 		[Required]
 		public string Title { get; set; }
 
-		[Column(TypeName = "nvarchar(20)")]
-		public StatusManga Status { get; set; }
+		[ForeignKey("Status")]
+		public int StatusId { get; set; }
+		public Status Status { get; set; }
 
+		[StringLength(500)]
 		public string? Description { get; set; }
 
 		[DataType(DataType.Date)]
-		public DateTime? Released {  get; set; }
+		[Column(TypeName = "date")]
+		public DateTime? ReleaseDate { get; set; }
 
-		public string? ThumbnailURL { get; set; }
-
-		[ForeignKey("Author")]
-		public int? AuthorId { get; set; }
-		public Author? Author { get; set; }
-        public ICollection<Gender>? Genres { get; set; } = new List<Gender>();
-
-        /**********************
-		public ICollection<Chapter>? Chapters { get; set; }
-		**********************/
-    }
+		public string? ThumbnailUrl { get; set; }
+		public virtual List<Author> Authors { get; set; }
+		public virtual List<Genre>? Genres { get; set; }
+		public virtual List<Chapter>? Chapters { get; set; }
+	}
 }
+
+

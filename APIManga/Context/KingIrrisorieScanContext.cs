@@ -1,50 +1,45 @@
-﻿using Microsoft.EntityFrameworkCore;
-using APIManga.Model;
-using Humanizer.Localisation;
+﻿using APIManga.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIManga.Context
 {
 	public class KingIrrisorieScanContext : DbContext
 	{
-		public KingIrrisorieScanContext(DbContextOptions<KingIrrisorieScanContext> options) : base(options) { }
-		
+		public KingIrrisorieScanContext(DbContextOptions<KingIrrisorieScanContext> options)
+			: base(options)
+		{
+		}
 		public DbSet<Manga> Mangas { get; set; }
 		public DbSet<Author> Authors { get; set; }
-		public DbSet<Gender> Genres { get; set; }
-		//public DbSet<Chapter> Chapters { get; set; }
-		//public DbSet<Page> Pages { get; set; }
-		//public DbSet<Image> Images { get; set; }
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		public DbSet<Genre> Genres { get; set; }
+		public DbSet<Status> Statuses { get; set; }
+		public DbSet<Chapter> Chapters { get; set; }
+		public DbSet<Page> Pages { get; set; }
+		public DbSet<Image> Images { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder builder)
 		{
-			modelBuilder.Entity<Author>()
-			.HasMany(a => a.Mangas)
-			.WithOne(m => m.Author)
-			.HasForeignKey(m => m.AuthorId);
+			builder.Entity<Manga>()
+				.HasMany(m => m.Authors)
+				.WithMany(a => a.Mangas)
+				.UsingEntity(j => j.ToTable("MangaAuthor"));
 
-            modelBuilder.Entity<Manga>()
-            .HasMany(m => m.Genres)
-            .WithMany(g => g.Mangas)
-            .UsingEntity<Dictionary<string, object>>(
-            "MangaGenre",
-            j => j.HasOne<Gender>().WithMany().HasForeignKey("GenreId"),
-            j => j.HasOne<Manga>().WithMany().HasForeignKey("MangaId"));
+			builder.Entity<Manga>()
+				.HasMany(m => m.Genres)
+				.WithMany(g => g.Mangas)
+				.UsingEntity(j => j.ToTable("MangaGenre"));
 
-            //modelBuilder.Entity<Manga>()
-            //.HasMany(m => m.Chapters)
-            //.WithOne(c => c.Manga)
-            //.HasForeignKey(c => c.MangaId);
+			builder.Entity<Chapter>()
+				.HasIndex(c => new { c.MangaId, c.Number })
+				.IsUnique();
 
+			builder.Entity<Page>()
+				.HasIndex(p => new { p.ChapterId, p.PageNumber })
+				.IsUnique();
 
-
-            //modelBuilder.Entity<Chapter>()
-            //.HasMany(c => c.Pages)
-            //.WithOne(p => p.Chapter)
-            //.HasForeignKey(p => p.ChapterId);
-
-            //modelBuilder.Entity<Page>()
-            //.HasMany(p => p.Images)
-            //.WithOne(i => i.Page)
-            //	.HasForeignKey(i => i.PageId);
-        }
-    }
+			builder.Entity<Image>()
+				.HasIndex(i => new { i.PageId, i.ImageOrder })
+				.IsUnique();
+		}
+	}
 }

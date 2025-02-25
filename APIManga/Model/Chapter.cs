@@ -7,16 +7,11 @@ namespace APIManga.Model
 	{
 		[Key]
 		public int Id { get; private set; }
-
-		[ForeignKey("Manga")]
 		public int MangaId { get; set; }
 		public Manga Manga { get; set; }
-
-
 		public string? Title { get; set; }
-
-		public int Number {  get; set; }
-
-		public ICollection<Page> Pages { get; set; }
+		public string Number { get; set; }
+		public DateTime? ReleaseDate { get; set; }
+		public virtual List<Page> Pages { get; set; }
 	}
 }

@@ -25,7 +25,7 @@ namespace frontend.Controllers
                 var manga = await GetMangaAsync(idint);
                 if (manga == null)
                 {
-                    Console.WriteLine("Manga não encontrado."); // Log para verificar se o manga é nulo
+                    Console.WriteLine("Manga não encontrado.");
                     return NotFound();
                 }
 

@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APIManga.Model
 {
-	public class Gender
+	public class Genre
 	{
 		[Key]
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public ICollection<Manga> Mangas { get; set; }
+		public virtual List<Manga> Mangas { get; set; }
 	}
 }

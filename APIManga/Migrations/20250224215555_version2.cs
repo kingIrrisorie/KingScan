@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace APIManga.Migrations
 {
     /// <inheritdoc />
-    public partial class CriacaoDetodasAsTabels : Migration
+    public partial class version2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,7 @@ namespace APIManga.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Gender",
+                name: "Genres",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -34,7 +34,20 @@ namespace APIManga.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Gender", x => x.Id);
+                    table.PrimaryKey("PK_Genres", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Statuses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Statuses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -44,20 +57,20 @@ namespace APIManga.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Status = table.Column<string>(type: "nvarchar(20)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Released = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ThumbnailURL = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AuthorId = table.Column<int>(type: "int", nullable: true)
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ReleaseDate = table.Column<DateTime>(type: "date", nullable: true),
+                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mangas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mangas_Authors_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "Authors",
-                        principalColumn: "Id");
+                        name: "FK_Mangas_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -68,7 +81,8 @@ namespace APIManga.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MangaId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Number = table.Column<int>(type: "int", nullable: false)
+                    Number = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -76,6 +90,30 @@ namespace APIManga.Migrations
                     table.ForeignKey(
                         name: "FK_Chapters_Mangas_MangaId",
                         column: x => x.MangaId,
+                        principalTable: "Mangas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MangaAuthor",
+                columns: table => new
+                {
+                    AuthorsId = table.Column<int>(type: "int", nullable: false),
+                    MangasId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MangaAuthor", x => new { x.AuthorsId, x.MangasId });
+                    table.ForeignKey(
+                        name: "FK_MangaAuthor_Authors_AuthorsId",
+                        column: x => x.AuthorsId,
+                        principalTable: "Authors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MangaAuthor_Mangas_MangasId",
+                        column: x => x.MangasId,
                         principalTable: "Mangas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -92,9 +130,9 @@ namespace APIManga.Migrations
                 {
                     table.PrimaryKey("PK_MangaGenre", x => new { x.GenresId, x.MangasId });
                     table.ForeignKey(
-                        name: "FK_MangaGenre_Gender_GenresId",
+                        name: "FK_MangaGenre_Genres_GenresId",
                         column: x => x.GenresId,
-                        principalTable: "Gender",
+                        principalTable: "Genres",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -132,8 +170,8 @@ namespace APIManga.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PageId = table.Column<int>(type: "int", nullable: false),
-                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Order = table.Column<int>(type: "int", nullable: false)
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageOrder = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -147,14 +185,21 @@ namespace APIManga.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chapters_MangaId",
+                name: "IX_Chapters_MangaId_Number",
                 table: "Chapters",
-                column: "MangaId");
+                columns: new[] { "MangaId", "Number" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Images_PageId",
+                name: "IX_Images_PageId_ImageOrder",
                 table: "Images",
-                column: "PageId");
+                columns: new[] { "PageId", "ImageOrder" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MangaAuthor_MangasId",
+                table: "MangaAuthor",
+                column: "MangasId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MangaGenre_MangasId",
@@ -162,14 +207,16 @@ namespace APIManga.Migrations
                 column: "MangasId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mangas_AuthorId",
+                name: "IX_Mangas_StatusId",
                 table: "Mangas",
-                column: "AuthorId");
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pages_ChapterId",
+                name: "IX_Pages_ChapterId_PageNumber",
                 table: "Pages",
-                column: "ChapterId");
+                columns: new[] { "ChapterId", "PageNumber" },
+                unique: true,
+                filter: "[PageNumber] IS NOT NULL");
         }
 
         /// <inheritdoc />
@@ -179,13 +226,19 @@ namespace APIManga.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
+                name: "MangaAuthor");
+
+            migrationBuilder.DropTable(
                 name: "MangaGenre");
 
             migrationBuilder.DropTable(
                 name: "Pages");
 
             migrationBuilder.DropTable(
-                name: "Gender");
+                name: "Authors");
+
+            migrationBuilder.DropTable(
+                name: "Genres");
 
             migrationBuilder.DropTable(
                 name: "Chapters");
@@ -194,7 +247,7 @@ namespace APIManga.Migrations
                 name: "Mangas");
 
             migrationBuilder.DropTable(
-                name: "Authors");
+                name: "Statuses");
         }
     }
 }

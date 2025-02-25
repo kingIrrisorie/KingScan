@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIManga.Migrations
 {
     [DbContext(typeof(KingIrrisorieScanContext))]
-    [Migration("20240815224429_CriacaoDetodasAsTabels")]
-    partial class CriacaoDetodasAsTabels
+    [Migration("20250224215555_version2")]
+    partial class version2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,20 +53,25 @@ namespace APIManga.Migrations
                     b.Property<int>("MangaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("ReleaseDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MangaId");
+                    b.HasIndex("MangaId", "Number")
+                        .IsUnique();
 
                     b.ToTable("Chapters");
                 });
 
-            modelBuilder.Entity("APIManga.Model.Gender", b =>
+            modelBuilder.Entity("APIManga.Model.Genre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -80,7 +85,7 @@ namespace APIManga.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gender");
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("APIManga.Model.Image", b =>
@@ -91,19 +96,20 @@ namespace APIManga.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ImagePath")
+                    b.Property<int>("ImageOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("int");
 
                     b.Property<int>("PageId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PageId");
+                    b.HasIndex("PageId", "ImageOrder")
+                        .IsUnique();
 
                     b.ToTable("Images");
                 });
@@ -116,20 +122,17 @@ namespace APIManga.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AuthorId")
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("ReleaseDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("StatusId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Released")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("ThumbnailURL")
+                    b.Property<string>("ThumbnailUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -138,7 +141,7 @@ namespace APIManga.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Mangas");
                 });
@@ -159,12 +162,46 @@ namespace APIManga.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChapterId");
+                    b.HasIndex("ChapterId", "PageNumber")
+                        .IsUnique()
+                        .HasFilter("[PageNumber] IS NOT NULL");
 
                     b.ToTable("Pages");
                 });
 
-            modelBuilder.Entity("GenderManga", b =>
+            modelBuilder.Entity("APIManga.Model.Status", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Statuses");
+                });
+
+            modelBuilder.Entity("AuthorManga", b =>
+                {
+                    b.Property<int>("AuthorsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MangasId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthorsId", "MangasId");
+
+                    b.HasIndex("MangasId");
+
+                    b.ToTable("MangaAuthor", (string)null);
+                });
+
+            modelBuilder.Entity("GenreManga", b =>
                 {
                     b.Property<int>("GenresId")
                         .HasColumnType("int");
@@ -203,11 +240,13 @@ namespace APIManga.Migrations
 
             modelBuilder.Entity("APIManga.Model.Manga", b =>
                 {
-                    b.HasOne("APIManga.Model.Author", "Author")
-                        .WithMany("Mangas")
-                        .HasForeignKey("AuthorId");
+                    b.HasOne("APIManga.Model.Status", "Status")
+                        .WithMany()
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Author");
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("APIManga.Model.Page", b =>
@@ -221,11 +260,11 @@ namespace APIManga.Migrations
                     b.Navigation("Chapter");
                 });
 
-            modelBuilder.Entity("GenderManga", b =>
+            modelBuilder.Entity("AuthorManga", b =>
                 {
-                    b.HasOne("APIManga.Model.Gender", null)
+                    b.HasOne("APIManga.Model.Author", null)
                         .WithMany()
-                        .HasForeignKey("GenresId")
+                        .HasForeignKey("AuthorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -236,9 +275,19 @@ namespace APIManga.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("APIManga.Model.Author", b =>
+            modelBuilder.Entity("GenreManga", b =>
                 {
-                    b.Navigation("Mangas");
+                    b.HasOne("APIManga.Model.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("APIManga.Model.Manga", null)
+                        .WithMany()
+                        .HasForeignKey("MangasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("APIManga.Model.Chapter", b =>
