@@ -1,4 +1,5 @@
 using APIManga.Context;
+using APIManga.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -12,8 +13,9 @@ namespace APIManga
 
 			// Add services to the container.
 			builder.Services.AddDbContext<KingIrrisorieScanContext>(options =>
-				options.UseSqlServer(
-					builder.Configuration.GetConnectionString("ConexaoPadrao")));
+				options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao")));
+
+			builder.Services.AddScoped<MangaService>(); // Registro do serviço
 
 			builder.Services.AddControllers();
 
@@ -36,7 +38,6 @@ namespace APIManga
 
 			var app = builder.Build();
 
-			// Configure the HTTP request pipeline.
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>
 			{

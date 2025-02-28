@@ -1,0 +1,25 @@
+.form-section {
+    padding: 20px;
+    text-align: center;
+}
+.form-section input, .form-section textarea {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    width: 300px;
+    border: 2px solid #ff0000;
+    border-radius: 5px;
+    background-color: #4b0082;
+    color: #fff;
+}
+.form-section button {
+    padding: 10px 20px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.form-section button:hover {
+    background-color: #cc0000;
+}

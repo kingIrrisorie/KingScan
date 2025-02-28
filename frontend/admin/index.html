@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mangá Mania - Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="banner">
+        <h1>Mangá Mania - Admin</h1>
+    </header>
+
+    <section class="form-section">
+        <form id="createForm">
+            <input type="text" id="title" placeholder="Título" required>
+            <input type="text" id="status" placeholder="Status (ex.: Finalizado)">
+            <textarea id="description" placeholder="Descrição"></textarea>
+            <input type="date" id="releaseDate" placeholder="Data de Lançamento">
+            <input type="url" id="thumbnailUrl" placeholder="URL da Thumbnail">
+            <input type="text" id="author" placeholder="Autor">
+            <input type="text" id="genres" placeholder="Gêneros (separados por vírgula)">
+            <button type="submit">Criar Mangá</button>
+        </form>
+    </section>
+
+    <section class="manga-list" id="mangaList"></section>
+
+    <script src="script.js"></script>
+</body>
+</html>
