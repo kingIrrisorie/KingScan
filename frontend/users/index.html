@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site de Mangá</title>
+    <link rel="stylesheet" href="styles/home.css">
+</head>
+<body>
+    <header>
+        <button class="menu-toggle">☰</button>
+        <nav>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#capitulos">Capítulos</a></li>
+                <li><a href="#resenhas">Resenhas</a></li>
+                <li><a href="#sobre">Sobre Nós</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <section id="home">
+            <h2>Destaques</h2>
+            <div class="carousel">
+                <button class="prev" data-target="manga-list">◄</button>
+                <div class="carousel-container" id="manga-list">
+                    <!-- Mangás serão adicionados aqui como cards -->
+                </div>
+                <button class="next" data-target="manga-list">►</button>
+            </div>
+        </section>
+        
+        <section id="capitulos">
+            <h2>Capítulos Recentes</h2>
+            <div class="carousel">
+                <button class="prev" data-target="chapter-list">◄</button>
+                <div class="carousel-container" id="chapter-list">
+                    <!-- Capítulos serão adicionados aqui -->
+                </div>
+                <button class="next" data-target="chapter-list">►</button>
+            </div>
+            <div class="coming-soon"></div>
+        </section>
+        
+        <section id="resenhas">
+            <h2>Resenhas</h2>
+            <div class="carousel">
+                <button class="prev" data-target="review-list">◄</button>
+                <div class="carousel-container" id="review-list">
+                    <!-- Resenhas serão adicionadas aqui -->
+                </div>
+                <button class="next" data-target="review-list">►</button>
+            </div>
+            <div class="coming-soon"></div>
+        </section>
+        
+        <section id="sobre">
+            <h2>Sobre Nós</h2>
+            <p>Informações sobre a equipe do site.</p>
+            <div class="coming-soon"></div>
+        </section>
+        
+        <section id="contato">
+            <h2>Contato</h2>
+            <form id="contact-form">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" required>
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+                
+                <label for="message">Mensagem:</label>
+                <textarea id="message" required></textarea>
+                
+                <button type="submit">Enviar</button>
+            </form>
+            <div class="coming-soon"></div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>© 2025 Site de Mangá. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="scripts/home.js"></script>
+</body>
+</html>

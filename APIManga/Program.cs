@@ -19,6 +19,25 @@ namespace APIManga
 
 			builder.Services.AddControllers();
 
+			// Configuracao de CORS
+			//builder.Services.AddCors(options =>
+			//{
+			//	options.AddPolicy("AllowFrontend", policy =>
+			//	{
+			//		policy.WithOrigins("http://127.0.0.1:5500")
+			//		.AllowAnyMethod()
+			//		.AllowAnyHeader();
+			//	});
+			//});
+
+			builder.Services.AddCors(options =>
+			{
+				options.AddPolicy("AllowAll", policy =>
+				{
+					policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+				});
+			});
+
 			// Configure Swagger/OpenAPI
 			builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen(c =>
@@ -44,6 +63,8 @@ namespace APIManga
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIManga v1");
 			});
 
+			//app.UseCors("AllowFrontend");
+			app.UseCors("AllowAll");
 			app.UseHttpsRedirection();
 			app.UseAuthorization();
 			app.MapControllers();

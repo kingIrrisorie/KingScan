@@ -93,3 +93,59 @@ namespace APIManga.Controllers
 		}
 	}
 }
+/* sugestao:
+[Route("api/[controller]")]
+[ApiController]
+public class CapitulosController : ControllerBase
+{
+    private readonly MangaService _mangaService;
+
+    public CapitulosController(MangaService mangaService)
+    {
+        _mangaService = mangaService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<CapituloDTO>>> GetRecentChapters()
+    {
+        var chapters = await _mangaService.GetRecentChaptersAsync(); // Implemente no service
+        return Ok(chapters);
+    }
+}
+
+public class CapituloDTO
+{
+    public int Id { get; set; }
+    public string Capitulo { get; set; } // Ex.: "Capítulo 1 - O Início"
+    public int MangaId { get; set; }
+    public DateTime ReleaseDate { get; set; }
+}
+*/
+
+/* outra sugestao:
+[Route("api/[controller]")]
+[ApiController]
+public class ResenhasController : ControllerBase
+{
+    private readonly MangaService _mangaService;
+
+    public ResenhasController(MangaService mangaService)
+    {
+        _mangaService = mangaService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ResenhaDTO>>> GetReviews()
+    {
+        var reviews = await _mangaService.GetReviewsAsync(); // Implemente no service
+        return Ok(reviews);
+    }
+}
+
+public class ResenhaDTO
+{
+    public int Id { get; set; }
+    public string Resenha { get; set; } // Ex.: "Uma obra incrível!"
+    public int MangaId { get; set; }
+    public DateTime CreatedAt { get; set; }
+}*/

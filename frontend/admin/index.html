@@ -3,29 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mangá Mania - Admin</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Site de Mangás</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <header class="banner">
-        <h1>Mangá Mania - Admin</h1>
+    <header>
+        <h1>Bem-vindo ao Mundo dos Mangás!</h1>
+        <input type="text" id="search-input" placeholder="Buscar Mangás" class="form-control">
     </header>
-
-    <section class="form-section">
-        <form id="createForm">
-            <input type="text" id="title" placeholder="Título" required>
-            <input type="text" id="status" placeholder="Status (ex.: Finalizado)">
-            <textarea id="description" placeholder="Descrição"></textarea>
-            <input type="date" id="releaseDate" placeholder="Data de Lançamento">
-            <input type="url" id="thumbnailUrl" placeholder="URL da Thumbnail">
-            <input type="text" id="author" placeholder="Autor">
-            <input type="text" id="genres" placeholder="Gêneros (separados por vírgula)">
-            <button type="submit">Criar Mangá</button>
-        </form>
-    </section>
-
-    <section class="manga-list" id="mangaList"></section>
-
+    <main>
+        <section id="manga-list">
+            <h2>Carrossel de Mangás</h2>
+            <div id="manga-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner" id="carousel-items">
+                    <!-- Os mangas serão adicionados aqui via JavaScript -->
+                </div>
+                <a class="carousel-control-prev" href="#manga-carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Anterior</span>
+                </a>
+                <a class="carousel-control-next" href="#manga-carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Próximo</span>
+                </a>
+            </div>
+        </section>
+        <section id="add-manga">
+            <h2>Adicionar Manga</h2>
+            <input type="text" id="manga-input" placeholder="Nome do Manga" class="form-control">
+            <button id="add-button" class="btn btn-primary">Adicionar</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Site de Mangás. Todos os direitos reservados.</p>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
