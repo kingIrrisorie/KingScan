@@ -15,26 +15,19 @@ namespace APIManga
 			builder.Services.AddDbContext<KingIrrisorieScanContext>(options =>
 				options.UseSqlServer(builder.Configuration.GetConnectionString("ConexaoPadrao")));
 
-			builder.Services.AddScoped<MangaService>(); // Registro do serviço
+			builder.Services.AddScoped<MangaService>();
 
 			builder.Services.AddControllers();
 
-			// Configuracao de CORS
-			//builder.Services.AddCors(options =>
-			//{
-			//	options.AddPolicy("AllowFrontend", policy =>
-			//	{
-			//		policy.WithOrigins("http://127.0.0.1:5500")
-			//		.AllowAnyMethod()
-			//		.AllowAnyHeader();
-			//	});
-			//});
-
+			// Configuração de CORS
 			builder.Services.AddCors(options =>
 			{
-				options.AddPolicy("AllowAll", policy =>
+				options.AddPolicy("AllowFrontend", policy =>
 				{
-					policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+					policy.WithOrigins("http://127.0.0.1:8080", "https://192.168.0.112:8080")
+						  .AllowAnyMethod()
+						  .AllowAnyHeader()
+						  .AllowCredentials();
 				});
 			});
 
@@ -55,7 +48,18 @@ namespace APIManga
 				});
 			});
 
+			// Configure Kestrel para ouvir em todos os IPs
+			builder.WebHost.ConfigureKestrel(options =>
+			{
+				options.ListenAnyIP(5215, listenOptions =>
+				{
+					listenOptions.UseHttps();
+				});
+			});
+
 			var app = builder.Build();
+
+			app.UseCors("AllowFrontend");
 
 			app.UseSwagger();
 			app.UseSwaggerUI(c =>
@@ -63,8 +67,6 @@ namespace APIManga
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIManga v1");
 			});
 
-			//app.UseCors("AllowFrontend");
-			app.UseCors("AllowAll");
 			app.UseHttpsRedirection();
 			app.UseAuthorization();
 			app.MapControllers();

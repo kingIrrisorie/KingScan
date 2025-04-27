@@ -1,5 +1,5 @@
 // URLs da API
-const API_URL_MANGAS = 'http://localhost:5215/api/Mangas';
+const API_URL_MANGAS = 'https://localhost:5215/api/Mangas';
 //const API_URL_CHAPTERS = 'http://localhost:5000/api/capitulos'; // Exemplo
 //const API_URL_REVIEWS = 'http://localhost:5000/api/resenhas';   // Exemplo
 
@@ -223,49 +223,3 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.querySelector('.menu-toggle');
     menuToggle.addEventListener('click', toggleMenu);
 });
-// sugestoes para o back-end (apenas como referência para o futuro):
-/*
-// Para "Capítulos Recentes", você poderia criar um endpoint como este:
-// [Route("api/[controller]")]
-// [ApiController]
-// public class CapitulosController : ControllerBase {
-//     private readonly MangaService _mangaService;
-//     public CapitulosController(MangaService mangaService) {
-//         _mangaService = mangaService;
-//     }
-//     [HttpGet]
-//     public async Task<ActionResult<IEnumerable<CapituloDTO>>> GetRecentChapters() {
-//         var chapters = await _mangaService.GetRecentChaptersAsync();
-//         return Ok(chapters);
-//     }
-// }
-// public class CapituloDTO {
-//     public int Id { get; set; }
-//     public string Capitulo { get; set; } // Ex.: "Capítulo 1 - O Início"
-//     public int MangaId { get; set; }
-//     public DateTime ReleaseDate { get; set; }
-// }
-// Então, substituir: displayItems(chapterData, 'chapter-list') por fetchData('http://localhost:5000/api/Capitulos', 'chapter-list');
-
-// Para "Resenhas", algo assim:
-// [Route("api/[controller]")]
-// [ApiController]
-// public class ResenhasController : ControllerBase {
-//     private readonly MangaService _mangaService;
-//     public ResenhasController(MangaService mangaService) {
-//         _mangaService = mangaService;
-//     }
-//     [HttpGet]
-//     public async Task<ActionResult<IEnumerable<ResenhaDTO>>> GetReviews() {
-//         var reviews = await _mangaService.GetReviewsAsync();
-//         return Ok(reviews);
-//     }
-// }
-// public class ResenhaDTO {
-//     public int Id { get; set; }
-//     public string Resenha { get; set; } // Ex.: "Uma obra incrível!"
-//     public int MangaId { get; set; }
-//     public DateTime CreatedAt { get; set; }
-// }
-// Então, substituir: displayItems(reviewData, 'review-list') por fetchData('http://localhost:5000/api/Resenhas', 'review-list');
-*/

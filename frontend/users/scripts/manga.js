@@ -1,16 +1,30 @@
 // URL da API para detalhes do mangá
-const API_URL_MANGA_BY_ID = 'http://localhost:5215/api/Mangas/';
+const API_URL_MANGA_BY_ID = 'https://localhost:5215/api/Mangas/';
+const API_URL_CHAPTERS = 'https://localhost:5215/api/Chapters';
 
 // Função para carregar detalhes de um mangá
 async function fetchMangaDetails(mangaId) {
     try {
         const response = await fetch(`${API_URL_MANGA_BY_ID}${mangaId}`);
-        if (!response.ok) throw new Error(`Erro ${response.status}`);
+        if (!response.ok) throw new Error(`Erro ${response.status}: ${response.statusText}`);
         const manga = await response.json();
         displayMangaDetails(manga);
     } catch (error) {
         console.error('Erro ao carregar detalhes do mangá:', error);
         alert('Erro ao carregar detalhes do mangá.');
+    }
+}
+
+// Função para carregar capítulos de um mangá
+async function fetchChapters(mangaId) {
+    try {
+        const response = await fetch(`${API_URL_CHAPTERS}/${mangaId}`);
+        if (!response.ok) throw new Error(`Erro ${response.status}: ${response.statusText}`);
+        const chapters = await response.json();
+        displayChapters(chapters);
+    } catch (error) {
+        console.error('Erro ao obter capítulos:', error);
+        alert('Erro ao carregar os capítulos.');
     }
 }
 
@@ -20,40 +34,50 @@ function displayMangaDetails(manga) {
     const title = document.querySelector('.manga-title');
     const description = document.querySelector('.manga-description');
     const genres = document.querySelector('.manga-genres');
-    const chapterList = document.querySelector('.chapter-list');
 
     thumbnail.src = manga.thumbnailUrl || 'https://via.placeholder.com/300x400';
-    thumbnail.alt = manga.title;
+    thumbnail.alt = manga.title || 'Sem título';
     title.textContent = manga.title || 'Sem título';
     description.textContent = manga.description || 'Sem descrição';
     genres.textContent = manga.genreNames ? manga.genreNames.join(', ') : 'Sem gênero';
 
-    // Placeholder para capítulos (pode ser expandido com uma API futura)
+    const backButton = document.querySelector('.back-button');
+    if (backButton) {
+        backButton.addEventListener('click', () => window.history.back());
+    }
+}
+
+// Exibir capítulos na página
+function displayChapters(chapters) {
+    const chapterList = document.querySelector('.chapter-list');
+    if (!chapterList) return;
     chapterList.innerHTML = '';
-    for (let i = 1; i <= 5; i++) {
+
+    if (!Array.isArray(chapters) || chapters.length === 0) {
         const li = document.createElement('li');
-        li.textContent = `Capítulo ${i} - Em Breve`;
+        li.textContent = 'Nenhum capítulo disponível.';
         chapterList.appendChild(li);
+        return;
     }
 
-    // Botão de voltar
-    const backButton = document.querySelector('.back-button');
-    backButton.addEventListener('click', () => {
-        window.history.back();
+    chapters.forEach((chapter, index) => {
+        const li = document.createElement('li');
+        li.textContent = chapter.title || `Capítulo ${index + 1} - Em Breve`;
+        chapterList.appendChild(li);
     });
 }
 
 // Toggle do menu hamburguer
 function toggleMenu() {
     const nav = document.querySelector('nav');
-    nav.classList.toggle('active');
+    if (nav) nav.classList.toggle('active');
 }
 
 // Fechar o menu ao clicar fora
 document.addEventListener('click', (e) => {
     const nav = document.querySelector('nav');
     const menuToggle = document.querySelector('.menu-toggle');
-    if (!nav.contains(e.target) && e.target !== menuToggle && nav.classList.contains('active')) {
+    if (nav && menuToggle && !nav.contains(e.target) && e.target !== menuToggle && nav.classList.contains('active')) {
         nav.classList.remove('active');
     }
 });
@@ -64,9 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const mangaId = urlParams.get('id');
     if (mangaId) {
         fetchMangaDetails(mangaId);
+        fetchChapters(mangaId);
     }
 
-    // Adicionar evento ao botão do menu
     const menuToggle = document.querySelector('.menu-toggle');
-    menuToggle.addEventListener('click', toggleMenu);
+    if (menuToggle) {
+        menuToggle.addEventListener('click', toggleMenu);
+    }
 });
