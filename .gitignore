@@ -3,6 +3,9 @@ APIManga/.vs/
 APIManga/bin/
 APIManga/obj/
 APIManga/appsettings.json
+backend/.venv/
+backend/__pycache__/
+backend/app/__pycache__/
 frontend/.vs/
 frontend/bin/
 frontend/obj/
