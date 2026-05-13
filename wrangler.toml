@@ -1,0 +1,5 @@
+name = "kingmanga"
+compatibility_date = "2026-05-12"
+
+[assets]
+directory = "./frontend/site"
