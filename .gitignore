@@ -5,6 +5,9 @@ APIManga/obj/
 APIManga/appsettings.json
 APIManga/appsettings.Development.json
 APIManga/Properties/PublishProfiles/*.pubxml.user
+backend/.venv/
+backend/__pycache__/
+backend/app/__pycache__/
 frontend/.vs/
 frontend/bin/
 frontend/obj/
