@@ -12,3 +12,7 @@ frontend/appsettings.json
 .env
 .env.*
 *.env
+king-cms/node_modules/
+king-cms/server/data/*.sqlite
+king-cms/server/uploads/*
+king-cms/server/*.log
